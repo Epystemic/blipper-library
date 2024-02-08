@@ -20,67 +20,67 @@ class Bitl:
         else:
             return False, None
 
-    def categorize_single_category(self, text, categories):
+    def categorizeSingleCategory(self, text, categories):
         if self.authenticated:
             data = {
             'text': text,
             'categories': categories
             }
-            response = requests.post(_config.bitl_url + "categorize_single_category", json=data)
+            response = requests.post(_config.bitl_url + "categorizeSingleCategory", json=data)
             return response.json()
         else:
             print_invalid_api_key()
             return None
 
-    def categorize_multiple_categories(self, text, categories):
+    def categorizeMultipleCategories(self, text, categories):
         if self.authenticated:
             data = {
             'text': text,
             'categories': categories
             }
-            response = requests.post(_config.bitl_url + "categorize_multiple_categories", json=data)
+            response = requests.post(_config.bitl_url + "categorizeMultipleCategories", json=data)
             return response.json()
         else:
             print_invalid_api_key()
             return None
         
-    def upload_doc(self, filename, directory):
+    def uploadFile(self, filename, directory):
         if self.authenticated:
             data = {
             'filename': filename,
             'directory': directory
             }
-            response = requests.post(_config.bitl_url + "upload_doc", json=data)
+            response = requests.post(_config.bitl_url + "uploadFile", json=data)
             return response.json()
         else:
             print_invalid_api_key()
             return None
         
-    def get_id_from_doc(self, filename):
+    def getIdFromFile(self, filename):
         if self.authenticated:
             data = {
             'filename': filename
             }
-            response = requests.get(_config.bitl_url + "get_id_from_doc", json=data)
+            response = requests.get(_config.bitl_url + "getIdFromFile", json=data)
             return response.json()
         else:
             print_invalid_api_key()
             return None
         
-    def get_doc_from_id(self, id):
+    def getFileFromId(self, id):
         if self.authenticated:
             data = {
             'id': id
             }
-            response = requests.get(_config.bitl_url + "get_doc_from_id", json=data)
+            response = requests.get(_config.bitl_url + "getFileFromId", json=data)
             return response.json()
         else:
             print_invalid_api_key()
             return None
         
-    def get_all_docs_and_ids(self):
+    def getAllFilesAndIds(self):
         if self.authenticated:
-            response = requests.get(_config.bitl_url + "get_all_docs_and_ids")
+            response = requests.get(_config.bitl_url + "getAllFilesAndIds")
             return response.json()
         else:
             print_invalid_api_key()
@@ -98,13 +98,13 @@ class Bitl:
             print_invalid_api_key()
             return None
         
-    def replace_doc_id(self, filename, id):
+    def replaceFile(self, filename, id):
         if self.authenticated:
             data = {
             'filename': filename,
             'id': id
             }
-            response = requests.post(_config.bitl_url + "replace_doc_id", json=data)
+            response = requests.post(_config.bitl_url + "replaceFile", json=data)
             return response.json()
         else:
             print_invalid_api_key()
@@ -121,83 +121,131 @@ class Bitl:
             print_invalid_api_key()
             return None
     
-    def analyze_csv(self, csv_file, query):
+    def analyzeCsv(self, csv_file, query):
         if self.authenticated:
             data = {
             'csv_file': csv_file,
             'query': query
             }
-            response = requests.post(_config.bitl_url + "analyze_csv", json=data)
+            response = requests.post(_config.bitl_url + "analyzeCsv", json=data)
             return response.json()
         else:
             print_invalid_api_key()
             return None
         
-    def get_language_txt(self, text):
+    def getLanguageText(self, text):
         if self.authenticated:
             data = {
             'text': text
             }
-            response = requests.post(_config.bitl_url + "get_language_txt", json=data)
+            response = requests.post(_config.bitl_url + "getLanguageText", json=data)
             return response.json()
         else:
             print_invalid_api_key()
             return None
         
-    def get_language_doc(self, text):
+    def getLanguageFile(self, text):
         if self.authenticated:
             data = {
             'text': text
             }
-            response = requests.post(_config.bitl_url + "get_language_doc", json=data)
+            response = requests.post(_config.bitl_url + "getLanguageFile", json=data)
             return response.json()
         else:
             print_invalid_api_key()
             return None
         
-    def speech_to_text(self, filename):
+    def speechToText(self, filename):
         if self.authenticated:
             data = {
             'filename': filename
             }
-            response = requests.post(_config.bitl_url + "speech_to_text", json=data)
+            response = requests.post(_config.bitl_url + "speechToText", json=data)
             return response.json()
         else:
             print_invalid_api_key()
             return None
         
-    def text_to_speech(self, text, output_path):
+    def textToSpeech(self, text, output_path):
         if self.authenticated:
             data = {
             'text': text,
             'output_path': output_path
             }
-            response = requests.post(_config.bitl_url + "text_to_speech", json=data)
+            response = requests.post(_config.bitl_url + "textToSpeech", json=data)
             return response.json()
         else:
             print_invalid_api_key()
             return None
     
-    def generate_image(self, text):
+    def generateImage(self, text):
         if self.authenticated:
             data = {
             'text': text
             }
-            response = requests.post(_config.bitl_url + "generate_image", json=data)
+            response = requests.post(_config.bitl_url + "generateImage", json=data)
             return response.json()
         else:
             print_invalid_api_key()
             return None
         
-    def ask_image(self, url, query):
+    def askImage(self, url, query):
         if self.authenticated:
             data = {
             'url': url,
             'query': query
             }
-            response = requests.post(_config.bitl_url + "ask_image", json=data)
+            response = requests.post(_config.bitl_url + "askImage", json=data)
             return response.json()
         else:
             print_invalid_api_key()
             return None
         
+    def answer_question_from_text(self, text, query):
+        if self.authenticated:
+            data = {
+            'text': text,
+            'query': query
+            }
+            response = requests.post(_config.bitl_url + "answerQuestion", json=data)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None    
+        
+    def categorize_text_from_options(self, text, options):
+        if self.authenticated:
+            data = {
+            'text': text,
+            'options': options
+            }
+            response = requests.post(_config.bitl_url + "categorize-text-from-options", json=data)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def categorize_text_multiple_from_options(self, text, options):
+        if self.authenticated:
+            data = {
+            'text': text,
+            'options': options
+            }
+            response = requests.post(_config.bitl_url + "categorize-text-multiple-from-options", json=data)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def create_agent(self, name, description, instructions):
+        if self.authenticated:
+            data = {
+            'name': name,
+            'description': description,
+            'instructions': instructions
+            }
+            response = requests.post(_config.bitl_url + "create-agent", json=data)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None   
