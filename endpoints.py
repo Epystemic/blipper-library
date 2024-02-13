@@ -1,20 +1,21 @@
 import requests
 
 import _config
-from _config import BITL_API_KEY
+from _config import BLIPPER_API
 
 
 def print_invalid_api_key():
     print("Invalid API key")
 
-class Bitl:
+class Blipper:
     def __init__(self, api_key):
         self.api_key = api_key
-        self.base_url = _config.bitl_url
+        self.base_url = _config.blipper_url
+        self.headers = {"api_key_header": api_key}
         self.authenticated, self.user = self.verify_api_key()
 
     def verify_api_key(self):
-        if self.api_key == BITL_API_KEY:
+        if self.api_key == BLIPPER_API:
             # Connect to L2 layer for authentication
             return True, "User1"
         else:
@@ -26,7 +27,7 @@ class Bitl:
             'text': text,
             'categories': categories
             }
-            response = requests.post(_config.bitl_url + "categorizeSingleCategory", json=data)
+            response = requests.post(_config.blipper_url + "categorizeSingleCategory", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -38,7 +39,7 @@ class Bitl:
             'text': text,
             'categories': categories
             }
-            response = requests.post(_config.bitl_url + "categorizeMultipleCategories", json=data)
+            response = requests.post(_config.blipper_url + "categorizeMultipleCategories", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -50,7 +51,7 @@ class Bitl:
             'filename': filename,
             'directory': directory
             }
-            response = requests.post(_config.bitl_url + "uploadFile", json=data)
+            response = requests.post(_config.blipper_url + "uploadFile", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -61,7 +62,7 @@ class Bitl:
             data = {
             'filename': filename
             }
-            response = requests.get(_config.bitl_url + "getIdFromFile", json=data)
+            response = requests.get(_config.blipper_url + "getIdFromFile", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -72,7 +73,7 @@ class Bitl:
             data = {
             'id': id
             }
-            response = requests.get(_config.bitl_url + "getFileFromId", json=data)
+            response = requests.get(_config.blipper_url + "getFileFromId", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -80,7 +81,7 @@ class Bitl:
         
     def getAllFilesAndIds(self):
         if self.authenticated:
-            response = requests.get(_config.bitl_url + "getAllFilesAndIds")
+            response = requests.get(_config.blipper_url + "getAllFilesAndIds")
             return response.json()
         else:
             print_invalid_api_key()
@@ -92,7 +93,7 @@ class Bitl:
             'text': text,
             'target_lang': target_lang
             }
-            response = requests.post(_config.bitl_url + "translate", json=data)
+            response = requests.post(_config.blipper_url + "translate", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -104,7 +105,7 @@ class Bitl:
             'filename': filename,
             'id': id
             }
-            response = requests.post(_config.bitl_url + "replaceFile", json=data)
+            response = requests.post(_config.blipper_url + "replaceFile", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -115,7 +116,7 @@ class Bitl:
             data = {
             'text': text
             }
-            response = requests.post(_config.bitl_url + "htmlize", json=data)
+            response = requests.post(_config.blipper_url + "htmlize", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -127,7 +128,7 @@ class Bitl:
             'csv_file': csv_file,
             'query': query
             }
-            response = requests.post(_config.bitl_url + "analyzeCsv", json=data)
+            response = requests.post(_config.blipper_url + "analyzeCsv", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -138,7 +139,7 @@ class Bitl:
             data = {
             'text': text
             }
-            response = requests.post(_config.bitl_url + "getLanguageText", json=data)
+            response = requests.post(_config.blipper_url + "getLanguageText", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -149,7 +150,7 @@ class Bitl:
             data = {
             'text': text
             }
-            response = requests.post(_config.bitl_url + "getLanguageFile", json=data)
+            response = requests.post(_config.blipper_url + "getLanguageFile", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -160,7 +161,7 @@ class Bitl:
             data = {
             'filename': filename
             }
-            response = requests.post(_config.bitl_url + "speechToText", json=data)
+            response = requests.post(_config.blipper_url + "speechToText", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -172,7 +173,7 @@ class Bitl:
             'text': text,
             'output_path': output_path
             }
-            response = requests.post(_config.bitl_url + "textToSpeech", json=data)
+            response = requests.post(_config.blipper_url + "textToSpeech", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -183,7 +184,7 @@ class Bitl:
             data = {
             'text': text
             }
-            response = requests.post(_config.bitl_url + "generateImage", json=data)
+            response = requests.post(_config.blipper_url + "generateImage", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -195,7 +196,7 @@ class Bitl:
             'url': url,
             'query': query
             }
-            response = requests.post(_config.bitl_url + "askImage", json=data)
+            response = requests.post(_config.blipper_url + "askImage", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -207,7 +208,7 @@ class Bitl:
             'text': text,
             'query': query
             }
-            response = requests.post(_config.bitl_url + "answerQuestion", json=data)
+            response = requests.post(_config.blipper_url + "answerQuestion", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -219,7 +220,7 @@ class Bitl:
             'text': text,
             'options': options
             }
-            response = requests.post(_config.bitl_url + "categorize-text-from-options", json=data)
+            response = requests.post(_config.blipper_url + "categorize-text-from-options", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -231,7 +232,7 @@ class Bitl:
             'text': text,
             'options': options
             }
-            response = requests.post(_config.bitl_url + "categorize-text-multiple-from-options", json=data)
+            response = requests.post(_config.blipper_url + "categorize-text-multiple-from-options", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -244,7 +245,7 @@ class Bitl:
             'description': description,
             'instructions': instructions
             }
-            response = requests.post(_config.bitl_url + "create-agent", json=data)
+            response = requests.post(_config.blipper_url + "create-agent", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
