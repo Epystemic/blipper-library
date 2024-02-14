@@ -261,3 +261,61 @@ class Blipper:
         else:
             print_invalid_api_key()
             return None
+        
+    def update_agent(self, name, description, instructions, id):
+        if self.authenticated:
+            data = {
+            'name': name,
+            'description': description,
+            'instructions': instructions,
+            'id': id
+            }
+            response = requests.post(_config.blipper_url + "update-agent", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def list_agents(self):
+        if self.authenticated:
+            response = requests.post(_config.blipper_url + "list-agents", headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None    
+
+    def create_conversation(self, agent_id):
+        if self.authenticated:
+            data = {
+            'agent_id': agent_id
+            }
+            response = requests.post(_config.blipper_url + "create-conversation", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def add_user_message(self, agent_id, conversation_id, message):
+        if self.authenticated:
+            data = {
+            'agent_id': agent_id,
+            'conversation_id': conversation_id,
+            'message': message
+            }
+            response = requests.post(_config.blipper_url + "add-user-message", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    def add_document_to_agent(self, agent_id, document_id):
+        if self.authenticated:
+            data = {
+            'agent_id': agent_id,
+            'document_d': document_id
+            }
+            response = requests.post(_config.blipper_url + "add-document-to-agent", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
