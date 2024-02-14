@@ -249,4 +249,15 @@ class Blipper:
             return response.json()
         else:
             print_invalid_api_key()
-            return None   
+            return None
+    
+    def get_conversation(self, conversation_id):
+        if self.authenticated:
+            data = {
+            'conversation_id': conversation_id
+            }
+            response = requests.post(_config.blipper_url + "get-conversation", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
