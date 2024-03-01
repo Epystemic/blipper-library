@@ -1,0 +1,6 @@
+[project]
+name = "blipper-library"
+version = "0.0.1"
+description = "A package"
+readme = "readme.md"
+requires-python = ">=3.11"
