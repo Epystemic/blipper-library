@@ -1,8 +1,6 @@
-import os
-import requests
-
-import _config
-from _config import BLIPPER_API
+import os, json, requests
+from . import _config
+from ._config import BLIPPER_AUTH_URL
 
 
 def print_invalid_api_key():
@@ -15,12 +13,16 @@ class Blipper:
         self.headers = {"api_key_header": api_key}
         self.authenticated, self.user = self.verify_api_key()
 
+    def getStatus(self, apikey):
+        data = {"key": apikey}
+        response = requests.post(BLIPPER_AUTH_URL, json=data)
+        return json.loads(response.content)
+
     def verify_api_key(self):
-        if self.api_key == BLIPPER_API:
-            # Connect to L2 layer for authentication
-            return True, "User1"
-        else:
-            return False, None
+        response = self.getStatus(self.api_key)
+        is_valid = True if response['status'] == 1 else False
+        user_id = response['client_id']
+        return is_valid, user_id
 
     def categorizeSingleCategory(self, text, categories):
         if self.authenticated:
