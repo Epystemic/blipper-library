@@ -1,0 +1,9 @@
+README.md
+setup.py
+blipper/__init__.py
+blipper/_config.py
+blipper.egg-info/PKG-INFO
+blipper.egg-info/SOURCES.txt
+blipper.egg-info/dependency_links.txt
+blipper.egg-info/requires.txt
+blipper.egg-info/top_level.txt
