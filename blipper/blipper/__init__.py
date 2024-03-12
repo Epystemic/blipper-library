@@ -1,4 +1,4 @@
-import requests, json
+import os, json, requests
 from . import _config
 from ._config import BLIPPER_AUTH_URL
 
@@ -241,14 +241,37 @@ class Blipper:
             print_invalid_api_key()
             return None
         
-    def create_agent(self, name, description, instructions):
+    def create_agent(self, name, description, task):
         if self.authenticated:
-            data = {
-            'name': name,
-            'description': description,
-            'instructions': instructions
-            }
-            response = requests.post(_config.blipper_url + "create-agent", json=data, headers=self.headers)
+            data = {'name': name, 'description': description, 'task': task}
+            response = requests.post(self.base_url + "create-agent", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def update_agent(self, agent_id: str, agent_info: dict):
+        if self.authenticated:
+            data = {"id": agent_id, **agent_info}
+            response = requests.post(self.base_url + "agents/update-agent", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    def agent_detail(self, agent_id: str):
+        if self.authenticated:
+            data = { "agent_id": agent_id }
+            response = requests.post(self.base_url + "agents/agent-detail", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def create_conversation(self, agent_id: str, user_id: str | None = None) -> str:    
+        if self.authenticated:
+            data = { "agent_id": agent_id, "user_id": user_id }
+            response = requests.post(self.base_url + "agents/create-conversation", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -256,68 +279,43 @@ class Blipper:
     
     def get_conversation(self, conversation_id):
         if self.authenticated:
-            data = {
-            'conversation_id': conversation_id
-            }
-            response = requests.post(_config.blipper_url + "get-conversation", json=data, headers=self.headers)
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
-        
-    def update_agent(self, name, description, instructions, id):
-        if self.authenticated:
-            data = {
-            'name': name,
-            'description': description,
-            'instructions': instructions,
-            'id': id
-            }
-            response = requests.post(_config.blipper_url + "update-agent", json=data, headers=self.headers)
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
-        
-    def list_agents(self):
-        if self.authenticated:
-            response = requests.post(_config.blipper_url + "list-agents", headers=self.headers)
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None    
-
-    def create_conversation(self, agent_id):
-        if self.authenticated:
-            data = {
-            'agent_id': agent_id
-            }
-            response = requests.post(_config.blipper_url + "create-conversation", json=data, headers=self.headers)
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
-        
-    def add_user_message(self, agent_id, conversation_id, message):
-        if self.authenticated:
-            data = {
-            'agent_id': agent_id,
-            'conversation_id': conversation_id,
-            'message': message
-            }
-            response = requests.post(_config.blipper_url + "add-user-message", json=data, headers=self.headers)
+            data = {'conversation_id': conversation_id}
+            response = requests.post(self.base_url + "agents/get-conversation", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
             return None
 
-    def add_document_to_agent(self, agent_id, document_id):
+    def add_file_to_agent(self, agent_id: str, filename: str, file) -> None:
         if self.authenticated:
-            data = {
-            'agent_id': agent_id,
-            'document_d': document_id
-            }
-            response = requests.post(_config.blipper_url + "add-document-to-agent", json=data, headers=self.headers)
+            file = {'file': (filename, file.read(), os.path.splitext(filename)[1])}
+            response = requests.post(self.base_url + f"agents/add-file-to-agent/{agent_id}", files=file, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    def agent_files(self, agent_id: str):
+        if self.authenticated:
+            data = { "agent_id": agent_id }
+            response = requests.post(self.base_url + "agents/agent-files/", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+    
+    def delete_agent_file(self, agent_id: str, file_id: str):
+        if self.authenticated:
+            response = requests.post(self.base_url + f"agents/remove-agent-file/{agent_id}/{file_id}", headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+                
+    def add_user_message(self, conversation_id: str, message: str, agent_id: str):
+        if self.authenticated:
+            data = { "conversation_id": conversation_id, "message": message, "agent_id": agent_id}
+            response = requests.post(self.base_url + "agents/add-user-message/", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
