@@ -6,7 +6,7 @@ setup(
     license='MIT',
     description='Blipper library by Atenea AI',
     long_description=open('README.md').read(),
-    install_requires=['requests','json'],
+    install_requires=['requests'],
     url='http://github.com/epystemic/blipper-library',
     author='Atenea AI',
     author_email='dev@atenea.ai'
