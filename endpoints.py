@@ -285,8 +285,9 @@ class Blipper:
             return None
 
     def add_file_to_agent(self, agent_id: str, filename: str, file) -> None:
+        from pathlib import Path        
         if self.authenticated:
-            file = {'file': (filename, file.read(), os.path.splitext(filename)[1])}
+            file = {'file': (filename, file.read(), Path(filename).suffix)}
             response = requests.post(self.base_url + f"agents/add-file-to-agent/{agent_id}", files=file, headers=self.headers)
             return response.json()
         else:
