@@ -1,4 +1,4 @@
-import os, json, requests
+import json, requests
 from . import _config
 from ._config import BLIPPER_AUTH_URL
 
