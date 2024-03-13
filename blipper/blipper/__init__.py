@@ -244,7 +244,7 @@ class Blipper:
     def create_agent(self, name, description, task):
         if self.authenticated:
             data = {'name': name, 'description': description, 'task': task}
-            response = requests.post(self.base_url + "create-agent", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "agents/create-agent", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
