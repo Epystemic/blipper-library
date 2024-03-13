@@ -204,7 +204,129 @@ class Blipper:
         else:
             print_invalid_api_key()
             return None
-        
+
+    def summarizeTextInOneSentence(self, text):
+        if self.authenticated:
+            data = {
+            'text': text
+            }
+            response = requests.post(_config.blipper_url + "summarizeTextInOneSentence", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    
+    def summarizeFileInOneSentence(self, id):
+        if self.authenticated:
+            data = {
+            'id': id
+            }
+            response = requests.post(_config.blipper_url + "summarizeFileInOneSentence", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    
+    def summarizeTextInOneParagraph(self, text):
+        if self.authenticated:
+            data = {
+            'text': text
+            }
+            response = requests.post(_config.blipper_url + "summarizeTextInOneParagraph", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+
+    def summarizeFileInOneParagraph(self, id):
+        if self.authenticated:
+            data = {
+            'id': id
+            }
+            response = requests.post(_config.blipper_url + "summarizeFileInOneParagraph", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+
+    def promptBlipper(self, text):
+        if self.authenticated:
+            data = {
+            'text': text
+            }
+            response = requests.post(_config.blipper_url + "promptBlipper", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    
+    def getKeyPointsText(self, text, num):
+        if self.authenticated:
+            data = {
+            'text': text,
+            'num': num
+            }
+            response = requests.post(_config.blipper_url + "getKeyPointsText", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    
+    def beepBadWords(self, text, custom_list):
+        if self.authenticated:
+            data = {
+            'text': text,
+            'custom_list': custom_list
+            }
+            response = requests.post(_config.blipper_url + "beepBadWords", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    
+    def hasBadWords(self, text):
+        if self.authenticated:
+            data = {
+            'text': text
+            }
+            response = requests.post(_config.blipper_url + "hasBadWords", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    
+    def askFile(self, id, query):
+        if self.authenticated:
+            data = {
+            'id': id,
+            'query': query
+            }
+            response = requests.post(_config.blipper_url + "askFile", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+
+    def recognizeCelebrities(self, id):
+        if self.authenticated:
+            data = {
+            'id': id
+            }
+            response = requests.post(_config.blipper_url + "recognizeCelebrities", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
     def answer_question_from_text(self, text, query):
         if self.authenticated:
             data = {
@@ -244,25 +366,7 @@ class Blipper:
     def create_agent(self, name, description, task):
         if self.authenticated:
             data = {'name': name, 'description': description, 'task': task}
-            response = requests.post(self.base_url + "create-agent", json=data, headers=self.headers)
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
-        
-    def update_agent(self, agent_id: str, agent_info: dict):
-        if self.authenticated:
-            data = {"id": agent_id, **agent_info}
-            response = requests.post(self.base_url + "agents/update-agent", json=data, headers=self.headers)
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
-
-    def agent_detail(self, agent_id: str):
-        if self.authenticated:
-            data = { "agent_id": agent_id }
-            response = requests.post(self.base_url + "agents/agent-detail", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "chat-agents/create-agent", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -271,7 +375,7 @@ class Blipper:
     def create_conversation(self, agent_id: str, user_id: str | None = None) -> str:    
         if self.authenticated:
             data = { "agent_id": agent_id, "user_id": user_id }
-            response = requests.post(self.base_url + "agents/create-conversation", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "chat-agents/create-conversation", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -280,17 +384,45 @@ class Blipper:
     def get_conversation(self, conversation_id):
         if self.authenticated:
             data = {'conversation_id': conversation_id}
-            response = requests.post(self.base_url + "agents/get-conversation", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "chat-agents/get-conversation", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def update_agent(self, agent_id: str, agent_info: dict):
+        if self.authenticated:
+            data = {"id": agent_id, **agent_info}
+            response = requests.post(self.base_url + "chat-agents/update-agent", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
             return None
 
-    def add_file_to_agent(self, agent_id: str, filename: str, file) -> None:
+
+    def agent_detail(self, agent_id: str):
+        if self.authenticated:
+            data = { "agent_id": agent_id }
+            response = requests.post(self.base_url + "chat-agents/agent-detail", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+    
+    def list_agents(self):
+        if self.authenticated:
+            response = requests.get(_config.blipper_url + "list-agents", headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+
+    def add_document_to_agent(self, agent_id: str, filename: str, file) -> None:
         from pathlib import Path        
         if self.authenticated:
             file = {'file': (filename, file.read(), Path(filename).suffix)}
-            response = requests.post(self.base_url + f"agents/add-file-to-agent/{agent_id}", files=file, headers=self.headers)
+            response = requests.post(self.base_url + f"chat-agents/add-document-to-agent/{agent_id}", files=file, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -299,15 +431,15 @@ class Blipper:
     def agent_files(self, agent_id: str):
         if self.authenticated:
             data = { "agent_id": agent_id }
-            response = requests.post(self.base_url + "agents/agent-files/", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "chat-agents/get-agent-documents/", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
             return None
     
-    def delete_agent_file(self, agent_id: str, file_id: str):
+    def delete_agent_document(self, agent_id: str, file_id: str):
         if self.authenticated:
-            response = requests.post(self.base_url + f"agents/remove-agent-file/{agent_id}/{file_id}", headers=self.headers)
+            response = requests.post(self.base_url + f"chat-agents/delete-agent-document/{agent_id}/{file_id}", headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -316,7 +448,83 @@ class Blipper:
     def add_user_message(self, conversation_id: str, message: str, agent_id: str):
         if self.authenticated:
             data = { "conversation_id": conversation_id, "message": message, "agent_id": agent_id}
-            response = requests.post(self.base_url + "agents/add-user-message/", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "chat-agents/add-user-message/", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+
+    def evaluate_resume(self, id):
+        if self.authenticated:
+            data = {
+            'id': id
+            }
+            response = requests.post(_config.blipper_url + "evaluate-resume", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    
+    def explain_topic(self, text, num):
+        if self.authenticated:
+            data = {
+            'text': text,
+            'num': num
+            }
+            response = requests.post(_config.blipper_url + "explain-topic", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    
+    def summarize_chat(self, conversation_id):
+        if self.authenticated:
+            data = {
+            'conversation_id': conversation_id
+            }
+            response = requests.post(_config.blipper_url + "chat-agents/summarize-chat", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    
+    def set_chat_goal(self, conversation_id, goal):
+        if self.authenticated:
+            data = {
+            'conversation_id': conversation_id,
+            'goal': goal
+            }
+            response = requests.post(_config.blipper_url + "chat-agents/set-chat-goal", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    
+    def check_chat_goal_completed(self, conversation_id):
+        if self.authenticated:
+            data = {
+            'conversation_id': conversation_id
+            }
+            response = requests.post(_config.blipper_url + "chat-agents/check-chat-goal-completed", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    
+    def get_chat_sentiment(self, conversation_id, criteria, num_max):
+        if self.authenticated:
+            data = {
+            'conversation_id': conversation_id,
+            'criteria': criteria,
+            'num_max': num_max
+            }
+            response = requests.post(_config.blipper_url + "chat-agents/chat-sentiment", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
