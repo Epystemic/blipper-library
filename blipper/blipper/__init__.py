@@ -439,7 +439,7 @@ class Blipper:
     
     def delete_agent_file(self, agent_id: str, file_id: str):
         if self.authenticated:
-            response = requests.post(self.base_url + f"agents/delete-agent-file/{agent_id}/{file_id}", headers=self.headers)
+            response = requests.post(self.base_url + f"agents/remove-agent-file/{agent_id}/{file_id}", headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
