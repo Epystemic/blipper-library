@@ -418,11 +418,11 @@ class Blipper:
             return None
 
 
-    def add_document_to_agent(self, agent_id: str, filename: str, file) -> None:
+    def add_file_to_agent(self, agent_id: str, filename: str, file) -> None:
         from pathlib import Path        
         if self.authenticated:
             file = {'file': (filename, file.read(), Path(filename).suffix)}
-            response = requests.post(self.base_url + f"agents/add-document-to-agent/{agent_id}", files=file, headers=self.headers)
+            response = requests.post(self.base_url + f"agents/add-file-to-agent/{agent_id}", files=file, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -431,15 +431,15 @@ class Blipper:
     def agent_files(self, agent_id: str):
         if self.authenticated:
             data = { "agent_id": agent_id }
-            response = requests.post(self.base_url + "agents/get-agent-documents/", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "agents/agent-files/", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
             return None
     
-    def delete_agent_document(self, agent_id: str, file_id: str):
+    def delete_agent_file(self, agent_id: str, file_id: str):
         if self.authenticated:
-            response = requests.post(self.base_url + f"agents/delete-agent-document/{agent_id}/{file_id}", headers=self.headers)
+            response = requests.post(self.base_url + f"agents/remove-agent-file/{agent_id}/{file_id}", headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
