@@ -366,7 +366,7 @@ class Blipper:
     def create_agent(self, name, description, task):
         if self.authenticated:
             data = {'name': name, 'description': description, 'task': task}
-            response = requests.post(self.base_url + "chat-agents/create-agent", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "agents/create-agent", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -375,7 +375,7 @@ class Blipper:
     def create_conversation(self, agent_id: str, user_id: str | None = None) -> str:    
         if self.authenticated:
             data = { "agent_id": agent_id, "user_id": user_id }
-            response = requests.post(self.base_url + "chat-agents/create-conversation", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "agents/create-conversation", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -384,7 +384,7 @@ class Blipper:
     def get_conversation(self, conversation_id):
         if self.authenticated:
             data = {'conversation_id': conversation_id}
-            response = requests.post(self.base_url + "chat-agents/get-conversation", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "agents/get-conversation", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -393,7 +393,7 @@ class Blipper:
     def update_agent(self, agent_id: str, agent_info: dict):
         if self.authenticated:
             data = {"id": agent_id, **agent_info}
-            response = requests.post(self.base_url + "chat-agents/update-agent", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "agents/update-agent", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -403,7 +403,7 @@ class Blipper:
     def agent_detail(self, agent_id: str):
         if self.authenticated:
             data = { "agent_id": agent_id }
-            response = requests.post(self.base_url + "chat-agents/agent-detail", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "agents/agent-detail", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -422,7 +422,7 @@ class Blipper:
         from pathlib import Path        
         if self.authenticated:
             file = {'file': (filename, file.read(), Path(filename).suffix)}
-            response = requests.post(self.base_url + f"chat-agents/add-document-to-agent/{agent_id}", files=file, headers=self.headers)
+            response = requests.post(self.base_url + f"agents/add-document-to-agent/{agent_id}", files=file, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -431,7 +431,7 @@ class Blipper:
     def agent_files(self, agent_id: str):
         if self.authenticated:
             data = { "agent_id": agent_id }
-            response = requests.post(self.base_url + "chat-agents/get-agent-documents/", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "agents/get-agent-documents/", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -439,7 +439,7 @@ class Blipper:
     
     def delete_agent_document(self, agent_id: str, file_id: str):
         if self.authenticated:
-            response = requests.post(self.base_url + f"chat-agents/delete-agent-document/{agent_id}/{file_id}", headers=self.headers)
+            response = requests.post(self.base_url + f"agents/delete-agent-document/{agent_id}/{file_id}", headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -448,7 +448,7 @@ class Blipper:
     def add_user_message(self, conversation_id: str, message: str, agent_id: str):
         if self.authenticated:
             data = { "conversation_id": conversation_id, "message": message, "agent_id": agent_id}
-            response = requests.post(self.base_url + "chat-agents/add-user-message/", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "agents/add-user-message/", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
