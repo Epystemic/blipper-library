@@ -9,7 +9,7 @@ def print_invalid_api_key():
 class Blipper:
     def __init__(self, api_key):
         self.api_key = api_key
-        self.base_url = "http://localhost:8081/"# _config.blipper_url
+        self.base_url = _config.blipper_url
         self.headers = {"api_key_header": api_key}
         self.authenticated, self.user = self.verify_api_key()
 
