@@ -529,3 +529,32 @@ class Blipper:
         else:
             print_invalid_api_key()
             return None
+        
+    def upload_template_filee(self, filename: str, file) -> None:
+        from pathlib import Path
+        if self.authenticated:
+            file = {'file': (filename, file.read(), Path(filename).suffix)}
+            response = requests.post(self.base_url + f"upload-template-file/", files=file, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def key_values_from_pdf(self, filename: str, file) -> None:
+        from pathlib import Path
+        if self.authenticated:
+            file = {'file': ("", file.read(), Path(filename).suffix)}
+            response = requests.post(self.base_url + f"key-values-from-pdf/", files=file, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    def create_template(self, template_id: str, text: str, final_document_id: str):
+        if self.authenticated:
+            data = { "template_id": template_id, "text": text, "final_document_id": final_document_id}
+            response = requests.post(self.base_url + "/create-template", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
