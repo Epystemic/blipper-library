@@ -9,7 +9,7 @@ def print_invalid_api_key():
 class Blipper:
     def __init__(self, api_key):
         self.api_key = api_key
-        self.base_url = _config.blipper_url
+        self.base_url = "http://localhost:8081/"# _config.blipper_url
         self.headers = {"api_key_header": api_key}
         self.authenticated, self.user = self.verify_api_key()
 
@@ -553,7 +553,7 @@ class Blipper:
     def create_template(self, template_id: str, text: str, final_document_id: str):
         if self.authenticated:
             data = { "template_id": template_id, "text": text, "final_document_id": final_document_id}
-            response = requests.post(self.base_url + "/create-template", json=data, headers=self.headers)
+            response = requests.post(self.base_url + "create-template", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
