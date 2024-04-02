@@ -530,7 +530,7 @@ class Blipper:
             print_invalid_api_key()
             return None
         
-    def upload_template_filee(self, filename: str, file) -> None:
+    def upload_template_file(self, filename: str, file) -> None:
         from pathlib import Path
         if self.authenticated:
             file = {'file': (filename, file.read(), Path(filename).suffix)}
