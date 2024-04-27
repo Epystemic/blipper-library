@@ -365,9 +365,9 @@ class Blipper:
             print_invalid_api_key()
             return None
         
-    def create_agent(self, name, description, task):
+    def create_agent(self, name, description, task, instructions):
         if self.authenticated:
-            data = {'name': name, 'description': description, 'task': task}
+            data = {'name': name, 'description': description, 'task': task, "instructions": instructions}
             response = requests.post(self.base_url + "agents/create-agent", json=data, headers=self.headers)
             return response.json()
         else:
@@ -449,9 +449,14 @@ class Blipper:
                 
     def add_user_message(self, conversation_id: str, message: str, agent_id: str):
         if self.authenticated:
+            # if not stream:
+                # data = { "conversation_id": conversation_id, "message": message, "agent_id": agent_id}
+                # response = requests.post(self.base_url + "agents/add-user-message/", json=data, headers=self.headers)
+                # return response.json()
             data = { "conversation_id": conversation_id, "message": message, "agent_id": agent_id}
-            response = requests.post(self.base_url + "agents/add-user-message/", json=data, headers=self.headers)
-            return response.json()
+            response = requests.post(self.base_url + "agents/add-user-message/", json=data, headers=self.headers, stream=True)
+            for chunk in response.iter_content(decode_unicode="utf-8", chunk_size=None):
+                yield chunk
         else:
             print_invalid_api_key()
             return None
