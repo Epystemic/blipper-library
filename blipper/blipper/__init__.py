@@ -2,6 +2,7 @@ import json, requests
 from . import _config
 from ._config import BLIPPER_AUTH_URL
 
+__version__ = '0.0.1'
 
 def print_invalid_api_key():
     print("Invalid API key")
