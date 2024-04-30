@@ -2,7 +2,6 @@ from io import BufferedReader
 from pathlib import Path
 import json, requests
 from . import _config
-from ._config import BLIPPER_AUTH_URL
 
 __version__ = '0.0.1'
 
@@ -18,7 +17,7 @@ class Blipper:
 
     def getStatus(self, apikey):
         data = {"key": apikey}
-        response = requests.post(BLIPPER_AUTH_URL, json=data)
+        response = requests.post(_config.BLIPPER_AUTH_URL, json=data)
         return json.loads(response.content)
 
     def verify_api_key(self):

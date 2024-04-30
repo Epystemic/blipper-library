@@ -1,9 +1,8 @@
 from setuptools import setup, find_packages
-from blipper import __version__
 
 setup(
     name='blipper',
-    version=__version__,
+    version='0.0.1',
     license=None,
     description='Blipper library by Atenea AI',
     long_description=open('README.md').read(),
