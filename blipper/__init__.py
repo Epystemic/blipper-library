@@ -3,6 +3,7 @@ from pathlib import Path
 import json, requests
 from . import _config
 
+
 __version__ = '0.0.1'
 
 def print_invalid_api_key():
@@ -50,11 +51,11 @@ class Blipper:
             print_invalid_api_key()
             return None
         
-    def uploadFile(self, filename, directory):
+    def uploadFile(self, src_file, dest_dir):
         if self.authenticated:
             data = {
-            'filename': filename,
-            'directory': directory
+            'src_file': src_file,
+            'dest_dir': dest_dir
             }
             response = requests.post(_config.blipper_url + "uploadFile", json=data, headers=self.headers)
             return response.json()
@@ -62,55 +63,33 @@ class Blipper:
             print_invalid_api_key()
             return None
         
-    def getIdFromFile(self, filename):
+    def getAllFiles(self):
         if self.authenticated:
-            data = {
-            'filename': filename
-            }
-            response = requests.get(_config.blipper_url + "getIdFromFile", json=data, headers=self.headers)
+            response = requests.get(_config.blipper_url + "getAllFiles")
             return response.json()
         else:
             print_invalid_api_key()
             return None
         
-    def getFileFromId(self, id):
-        if self.authenticated:
-            data = {
-            'id': id
-            }
-            response = requests.get(_config.blipper_url + "getFileFromId", json=data, headers=self.headers)
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
-        
-    def getAllFilesAndIds(self):
-        if self.authenticated:
-            response = requests.get(_config.blipper_url + "getAllFilesAndIds")
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
-        
-    def translate(self, text, target_lang):
+    def translateText(self, text, target_lang):
         if self.authenticated:
             data = {
             'text': text,
             'target_lang': target_lang
             }
-            response = requests.post(_config.blipper_url + "translate", json=data, headers=self.headers)
+            response = requests.post(_config.blipper_url + "translateText", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
             return None
         
-    def replaceFile(self, filename, id):
+    def translateFile(self, file_id, target_lang):
         if self.authenticated:
             data = {
-            'filename': filename,
-            'id': id
+            'file_id': file_id,
+            'target_lang': target_lang
             }
-            response = requests.post(_config.blipper_url + "replaceFile", json=data, headers=self.headers)
+            response = requests.post(_config.blipper_url + "translateFile", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -127,13 +106,13 @@ class Blipper:
             print_invalid_api_key()
             return None
     
-    def analyzeCsv(self, csv_file, query):
+    def analyzeCSV(self, id, query):
         if self.authenticated:
             data = {
-            'csv_file': csv_file,
+            'id': id,
             'query': query
             }
-            response = requests.post(_config.blipper_url + "analyzeCsv", json=data, headers=self.headers)
+            response = requests.post(_config.blipper_url + "analyzeCSV", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -150,10 +129,10 @@ class Blipper:
             print_invalid_api_key()
             return None
         
-    def getLanguageFile(self, text):
+    def getLanguageFile(self, file_id):
         if self.authenticated:
             data = {
-            'text': text
+            'file_id': file_id
             }
             response = requests.post(_config.blipper_url + "getLanguageFile", json=data, headers=self.headers)
             return response.json()
@@ -161,24 +140,24 @@ class Blipper:
             print_invalid_api_key()
             return None
         
-    def speechToText(self, filename):
+    def TextFromAudio(self, file_id):
         if self.authenticated:
             data = {
-            'filename': filename
+            'file_id': file_id
             }
-            response = requests.post(_config.blipper_url + "speechToText", json=data, headers=self.headers)
+            response = requests.post(_config.blipper_url + "TextFromAudio", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
             return None
         
-    def textToSpeech(self, text, output_path):
+    def AudioFromText(self, text, filename):
         if self.authenticated:
             data = {
             'text': text,
-            'output_path': output_path
+            'filename': filename
             }
-            response = requests.post(_config.blipper_url + "textToSpeech", json=data, headers=self.headers)
+            response = requests.post(_config.blipper_url + "AudioFromText", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
@@ -195,10 +174,10 @@ class Blipper:
             print_invalid_api_key()
             return None
         
-    def askImage(self, url, query):
+    def askImage(self, image_id, query):
         if self.authenticated:
             data = {
-            'url': url,
+            'image_id': image_id,
             'query': query
             }
             response = requests.post(_config.blipper_url + "askImage", json=data, headers=self.headers)
@@ -207,6 +186,28 @@ class Blipper:
             print_invalid_api_key()
             return None
 
+    def describeImage(self, file_id):
+        if self.authenticated:
+            data = {
+            'file_id': file_id
+            }
+            response = requests.post(_config.blipper_url + "describeImage", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def textFromImage(self, file_id):
+        if self.authenticated:
+            data = {
+            'file_id': file_id
+            }
+            response = requests.post(_config.blipper_url + "textFromImage", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
     def summarizeTextInOneSentence(self, text):
         if self.authenticated:
             data = {
@@ -219,10 +220,10 @@ class Blipper:
             return None
 
     
-    def summarizeFileInOneSentence(self, id):
+    def summarizeFileInOneSentence(self, file_id):
         if self.authenticated:
             data = {
-            'id': id
+            'file_id': file_id
             }
             response = requests.post(_config.blipper_url + "summarizeFileInOneSentence", json=data, headers=self.headers)
             return response.json()
@@ -243,10 +244,10 @@ class Blipper:
             return None
 
 
-    def summarizeFileInOneParagraph(self, id):
+    def summarizeFileInOneParagraph(self, file_id):
         if self.authenticated:
             data = {
-            'id': id
+            'file_id': file_id
             }
             response = requests.post(_config.blipper_url + "summarizeFileInOneParagraph", json=data, headers=self.headers)
             return response.json()
@@ -279,6 +280,17 @@ class Blipper:
             print_invalid_api_key()
             return None
 
+    def getKeyPointsFile(self, file_id, num):
+        if self.authenticated:
+            data = {
+            'file_id': file_id,
+            'num': num
+            }
+            response = requests.post(_config.blipper_url + "getKeyPointsFile", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
     
     def beepBadWords(self, text, custom_list):
         if self.authenticated:
@@ -318,10 +330,10 @@ class Blipper:
             return None
 
 
-    def recognizeCelebrities(self, id):
+    def recognizeCelebrities(self, file_id):
         if self.authenticated:
             data = {
-            'id': id
+            'file_id': file_id
             }
             response = requests.post(_config.blipper_url + "recognizeCelebrities", json=data, headers=self.headers)
             return response.json()
@@ -462,10 +474,11 @@ class Blipper:
             return None
 
 
-    def evaluate_resume(self, id):
+    def evaluate_resume(self, resume, job_reqs):
         if self.authenticated:
             data = {
-            'id': id
+            'resume': resume,
+            'job_reqs': job_reqs
             }
             response = requests.post(_config.blipper_url + "evaluate-resume", json=data, headers=self.headers)
             return response.json()
@@ -486,7 +499,28 @@ class Blipper:
             print_invalid_api_key()
             return None
 
-    
+    def extract_text(self, file_id):
+        if self.authenticated:
+            data = {
+            'file_id': file_id
+            }
+            response = requests.post(_config.blipper_url + "extractText", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def getFileType(self, file_id):
+        if self.authenticated:
+            data = {
+            'file_id': file_id
+            }
+            response = requests.post(_config.blipper_url + "getFileType", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+    """
     def summarize_chat(self, conversation_id):
         if self.authenticated:
             data = {
@@ -536,7 +570,7 @@ class Blipper:
         else:
             print_invalid_api_key()
             return None
-        
+       """ 
     def upload_template_file(self, filename: str, file) -> None:
         from pathlib import Path
         if self.authenticated:
@@ -566,6 +600,123 @@ class Blipper:
             }
             print(data)
             response = requests.post(self.base_url + "create-template/", files=file, data=data)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+
+    def breakDownTask(self, text, num):
+        if self.authenticated:
+            data = {
+            'text': text,
+            'num': num
+            }
+            response = requests.post(_config.blipper_url + "breakDownTask", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def toxicityIndex(self, text):
+        if self.authenticated:
+            data = {
+            'text': text
+            }
+            response = requests.post(_config.blipper_url + "toxicityIndex", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def TranscriptFromConversation(self, s3_uri, language, max_speakers):
+        if self.authenticated:
+            data = {
+                's3_uri': s3_uri,
+                'language': language,
+                'max_speakers': max_speakers
+            }
+            response = requests.post(_config.blipper_url + "TranscriptFromConversation", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def deleteFile(self, file_id):
+        if self.authenticated:
+            data = {
+            'file_id': file_id
+            }
+            response = requests.post(_config.blipper_url + "deleteFile", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def getSentiment(self, text):
+        if self.authenticated:
+            data = {
+            'text': text
+            }
+            response = requests.post(_config.blipper_url + "getSentiment", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def paraphraseSimple(self, text):
+        if self.authenticated:
+            data = {
+            'text': text
+            }
+            response = requests.post(_config.blipper_url + "paraphraseSimple", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def paraphrase(self, text, num_words, style):
+        if self.authenticated:
+            data = {
+            'text': text,
+            'num_words': num_words,
+            'style': style
+            }
+            response = requests.post(_config.blipper_url + "paraphrase", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def AudioFromVideo(self, file_id):
+        if self.authenticated:
+            data = {
+            'file_id': file_id
+            }
+            response = requests.post(_config.blipper_url + "AudioFromVideo", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def trimAudioClip(self, file_id, start_minutes, end_minutes):
+        if self.authenticated:
+            data = {
+            'file_id': file_id,
+            'start_minutes': start_minutes,
+            'end_minutes': end_minutes
+            }
+            response = requests.post(_config.blipper_url + "trimAudioClip", json=data, headers=self.headers)
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def TextFromVideo(self, file_id):
+        if self.authenticated:
+            data = {
+            'file_id': file_id
+            }
+            response = requests.post(_config.blipper_url + "TextFromVideo", json=data, headers=self.headers)
             return response.json()
         else:
             print_invalid_api_key()
