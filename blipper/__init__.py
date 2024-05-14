@@ -348,7 +348,7 @@ class Blipper:
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def upload_template_file(self, filename: str, file) -> None:
+    def uploadTemplateFile(self, filename: str, file: BufferedReader) -> None:
         from pathlib import Path
 
         if self.authenticated:
@@ -363,7 +363,7 @@ class Blipper:
             print_invalid_api_key()
             return None
 
-    def key_values_from_pdf(self, filename: str, file) -> None:
+    def keyValuesFromPDF(self, filename: str, file: BufferedReader) -> None:
         if self.authenticated:
             file = {"file": ("", file.read(), Path(filename).suffix)}
             response = requests.post(
@@ -376,7 +376,7 @@ class Blipper:
             print_invalid_api_key()
             return None
 
-    def create_template(
+    def createTemplate(
         self,
         template_id: str,
         values: list[str],
@@ -405,21 +405,21 @@ class Blipper:
             print_invalid_api_key()
             return None
 
-    def breakDownTask(self, text, num):
+    def breakDownTask(self, text: str, num: int):
         if self.authenticated:
             data = {"text": text, "num": num}
         func_name = "breakDownTask"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def toxicityIndex(self, text):
+    def toxicityIndex(self, text: str):
         if self.authenticated:
             data = {"text": text}
         func_name = "toxicityIndex"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def TranscriptFromConversation(self, s3_uri, language, max_speakers):
+    def TranscriptFromConversation(self, s3_uri: str, language: str, max_speakers: int):
         if self.authenticated:
             data = {
                 "s3_uri": s3_uri,
@@ -444,28 +444,28 @@ class Blipper:
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def paraphraseSimple(self, text):
+    def paraphraseSimple(self, text: str):
         if self.authenticated:
             data = {"text": text}
         func_name = "paraphraseSimple"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def paraphrase(self, text, num_words, style):
+    def paraphrase(self, text: str, num_words: int, style: str):
         if self.authenticated:
             data = {"text": text, "num_words": num_words, "style": style}
         func_name = "paraphrase"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def AudioFromVideo(self, file_id):
+    def AudioFromVideo(self, file_id: str):
         if self.authenticated:
             data = {"file_id": file_id}
         func_name = "AudioFromVideo"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def trimAudioClip(self, file_id, start_minutes, end_minutes):
+    def trimAudioClip(self, file_id: str, start_minutes, end_minutes):
         if self.authenticated:
             data = {
                 "file_id": file_id,
@@ -476,7 +476,7 @@ class Blipper:
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def TextFromVideo(self, file_id):
+    def TextFromVideo(self, file_id: str):
         if self.authenticated:
             data = {"file_id": file_id}
         func_name = "TextFromVideo"
