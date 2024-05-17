@@ -349,8 +349,6 @@ class Blipper:
         return result
 
     def uploadTemplateFile(self, filename: str, file: BufferedReader) -> None:
-        from pathlib import Path
-
         if self.authenticated:
             file = {"file": (filename, file.read(), Path(filename).suffix)}
             response = requests.post(
@@ -386,7 +384,7 @@ class Blipper:
         if self.authenticated:
             file = {
                 "file": (
-                    source_document.name.split("/")[-1],
+                    source_document.name.split("/")[-1], # Path(source_document.name).name,
                     source_document.read(),
                     Path(source_document.name).suffix,
                 )
@@ -399,6 +397,39 @@ class Blipper:
             print(data)
             response = requests.post(
                 self.base_url + "create-template/", files=file, data=data
+            )
+            return response.json()
+        else:
+            print_invalid_api_key()
+            return None
+        
+    def createTemplateMultiple(
+        self,
+        template_id: str,
+        values: list[str],
+        source_documents: list[BufferedReader],
+        final_document_id: str,
+    ):
+        if self.authenticated:
+            files = [
+                (
+                    'file', 
+                    (
+                        Path(source_document.name).name,
+                        source_document.read(),
+                        Path(source_document.name).suffix
+                    )
+                )
+                for source_document in source_documents
+            ]
+
+            data = {
+                "template_id": template_id,
+                "values": values,
+                "final_document_id": final_document_id,
+            }
+            response = requests.post(
+                self.base_url + "create-template-multiple/", files=files, data=data
             )
             return response.json()
         else:
