@@ -361,52 +361,51 @@ class Blipper:
             print_invalid_api_key()
             return None
 
-    def keyValuesFromPDF(self, filename: str, file: BufferedReader) -> None:
-        if self.authenticated:
-            file = {"file": ("", file.read(), Path(filename).suffix)}
-            response = requests.post(
-                self.base_url + f"key-values-from-pdf/",
-                files=file,
-                headers=self.headers,
-            )
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
+    # def keyValuesFromPDF(self, filename: str, file: BufferedReader) -> None:
+    #     if self.authenticated:
+    #         file = {"file": ("", file.read(), Path(filename).suffix)}
+    #         response = requests.post(
+    #             self.base_url + f"key-values-from-pdf/",
+    #             files=file,
+    #             headers=self.headers,
+    #         )
+    #         return response.json()
+    #     else:
+    #         print_invalid_api_key()
+    #         return None
 
+    # def createTemplate(
+    #     self,
+    #     template_id: str,
+    #     values: list[str],
+    #     source_document: BufferedReader,
+    #     final_document_id: str,
+    # ):
+    #     if self.authenticated:
+    #         file = {
+    #             "file": (
+    #                 source_document.name.split("/")[-1], # Path(source_document.name).name,
+    #                 source_document.read(),
+    #                 Path(source_document.name).suffix,
+    #             )
+    #         }
+    #         data = {
+    #             "template_id": template_id,
+    #             "values": values,
+    #             "final_document_id": final_document_id,
+    #         }
+    #         response = requests.post(
+    #             self.base_url + "create-template/", files=file, data=data
+    #         )
+    #         return response.json()
+    #     else:
+    #         print_invalid_api_key()
+    #         return None
+        
     def createTemplate(
         self,
         template_id: str,
-        values: list[str],
-        source_document: BufferedReader,
-        final_document_id: str,
-    ):
-        if self.authenticated:
-            file = {
-                "file": (
-                    source_document.name.split("/")[-1], # Path(source_document.name).name,
-                    source_document.read(),
-                    Path(source_document.name).suffix,
-                )
-            }
-            data = {
-                "template_id": template_id,
-                "values": values,
-                "final_document_id": final_document_id,
-            }
-            print(data)
-            response = requests.post(
-                self.base_url + "create-template/", files=file, data=data
-            )
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
-        
-    def createTemplateMultiple(
-        self,
-        template_id: str,
-        values: list[str],
+        # values: list[str],
         source_documents: list[BufferedReader],
         final_document_id: str,
     ):
@@ -425,7 +424,7 @@ class Blipper:
 
             data = {
                 "template_id": template_id,
-                "values": values,
+                # "values": values,
                 "final_document_id": final_document_id,
             }
             response = requests.post(
