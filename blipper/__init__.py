@@ -405,7 +405,6 @@ class Blipper:
     def createTemplate(
         self,
         template_id: str,
-        # values: list[str],
         source_documents: list[BufferedReader],
         final_document_id: str,
     ):
@@ -424,11 +423,10 @@ class Blipper:
 
             data = {
                 "template_id": template_id,
-                # "values": values,
                 "final_document_id": final_document_id,
             }
             response = requests.post(
-                self.base_url + "create-template-multiple/", files=files, data=data
+                self.base_url + "create-template/", files=files, data=data
             )
             return response.json()
         else:
