@@ -1,6 +1,7 @@
 from io import BufferedReader
 from pathlib import Path
 import json, requests
+from typing import Literal
 from . import _config
 
 
@@ -68,13 +69,19 @@ class Blipper:
             print_invalid_api_key()
             return None
 
-    def translateText(self, text, target_lang):
+    def translateText(self, text: str, target_lang: Literal["inglés", "español", "aleman", "portugues"]):
+        """
+        Function to translate a given text into a selected language
+        """
         data = {"text": text, "target_lang": target_lang}
         func_name = "translateText"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def translateFile(self, file_id, target_lang):
+    def translateFile(self, file_id: str, target_lang: Literal["inglés", "español", "aleman", "portugues"]):
+        """
+        Function to translate the text of a given file into a selected language
+        """
         data = {"file_id": file_id, "target_lang": target_lang}
         func_name = "translateFile"
         result = self.response_template(input_data=data, func_name=func_name)
@@ -405,9 +412,12 @@ class Blipper:
     def createTemplate(
         self,
         template_id: str,
-        source_documents: list[BufferedReader],
+        source_documents: list[str],
         final_document_id: str,
     ):
+        """
+        Function to complete variables of a document template based on information from source documents.
+        """
         if self.authenticated:
             files = [
                 (
