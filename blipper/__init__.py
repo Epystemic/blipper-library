@@ -12,12 +12,17 @@ def print_invalid_api_key():
 
 
 class Blipper:
-    def __init__(self, api_key, verbatim=True):
+
+    def __init__(self, api_key, verbatim=True, user_id: str | None = None, conversation_id: str | None = None ):
         self.api_key = api_key
         self.base_url = _config.blipper_url
         self.headers = {"api_key_header": api_key}
         self.authenticated, self.user = self.verify_api_key()
         self.verbatim = verbatim
+        if user_id:
+            self.headers["user_id"] = user_id
+        if conversation_id:
+            self.headers["conversation_id"] = conversation_id
 
     def response_template(self, input_data: dict, func_name: str):
         if self.authenticated:
