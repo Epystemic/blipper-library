@@ -12,25 +12,23 @@ def print_invalid_api_key():
 
 
 class Blipper:
-
-    def __init__(self, api_key, verbatim=True, user_id: str | None = None, conversation_id: str | None = None ):
+    def __init__(self, api_key, verbose=True, user_id=None, conversation_id=None):
         self.api_key = api_key
         self.base_url = _config.blipper_url
-        self.headers = {"api_key_header": api_key}
+        self.headers = {"api_key_header": api_key, 'user_id':user_id , 'conversation_id':conversation_id}
         self.authenticated, self.user = self.verify_api_key()
-        self.verbatim = verbatim
-        if user_id:
-            self.headers["user_id"] = user_id
-        if conversation_id:
-            self.headers["conversation_id"] = conversation_id
+        self.verbose = verbose
 
     def response_template(self, input_data: dict, func_name: str):
         if self.authenticated:
             response = requests.post(
                 _config.blipper_url + func_name, json=input_data, headers=self.headers
             )
-            if self.verbatim:
-                return response.json()
+            if self.verbose:
+                resp_json = response.json()
+                resp_json['user_id'] = self.headers['atenea_user_id']
+                resp_json['conversation_id'] = self.headers['atenea_conversation_id']
+                return resp_json
             else:
                 return response.json()["response"]
         else:
