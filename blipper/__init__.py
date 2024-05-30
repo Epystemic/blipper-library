@@ -3,19 +3,22 @@ from pathlib import Path
 import json, requests
 from typing import Literal
 from . import _config
+import logging
 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 __version__ = "0.0.1"
 
 def print_invalid_api_key():
-    print("Invalid API key")
+    logger.error("Invalid API key")
 
 
 class Blipper:
     def __init__(self, api_key, verbose=True, user_id=None, conversation_id=None):
         self.api_key = api_key
         self.base_url = _config.blipper_url
-        self.headers = {"api_key_header": api_key, 'user_id':user_id , 'conversation_id':conversation_id}
+        self.headers = {"blipper-api-key": api_key, 'user_id':user_id , 'conversation_id':conversation_id}
         self.authenticated, self.user = self.verify_api_key()
         self.verbose = verbose
 
@@ -370,47 +373,6 @@ class Blipper:
         else:
             print_invalid_api_key()
             return None
-
-    # def keyValuesFromPDF(self, filename: str, file: BufferedReader) -> None:
-    #     if self.authenticated:
-    #         file = {"file": ("", file.read(), Path(filename).suffix)}
-    #         response = requests.post(
-    #             self.base_url + f"key-values-from-pdf/",
-    #             files=file,
-    #             headers=self.headers,
-    #         )
-    #         return response.json()
-    #     else:
-    #         print_invalid_api_key()
-    #         return None
-
-    # def createTemplate(
-    #     self,
-    #     template_id: str,
-    #     values: list[str],
-    #     source_document: BufferedReader,
-    #     final_document_id: str,
-    # ):
-    #     if self.authenticated:
-    #         file = {
-    #             "file": (
-    #                 source_document.name.split("/")[-1], # Path(source_document.name).name,
-    #                 source_document.read(),
-    #                 Path(source_document.name).suffix,
-    #             )
-    #         }
-    #         data = {
-    #             "template_id": template_id,
-    #             "values": values,
-    #             "final_document_id": final_document_id,
-    #         }
-    #         response = requests.post(
-    #             self.base_url + "create-template/", files=file, data=data
-    #         )
-    #         return response.json()
-    #     else:
-    #         print_invalid_api_key()
-    #         return None
         
     def createTemplate(
         self,
@@ -523,55 +485,3 @@ class Blipper:
         func_name = "TextFromVideo"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
-
-    """
-    def summarize_chat(self, conversation_id):
-        if self.authenticated:
-            data = {
-            'conversation_id': conversation_id
-            }
-            response = requests.post(_config.blipper_url + "chat-agents/summarize-chat", json=data, headers=self.headers)
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
-
-    
-    def set_chat_goal(self, conversation_id, goal):
-        if self.authenticated:
-            data = {
-            'conversation_id': conversation_id,
-            'goal': goal
-            }
-            response = requests.post(_config.blipper_url + "chat-agents/set-chat-goal", json=data, headers=self.headers)
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
-
-    
-    def check_chat_goal_completed(self, conversation_id):
-        if self.authenticated:
-            data = {
-            'conversation_id': conversation_id
-            }
-            response = requests.post(_config.blipper_url + "chat-agents/check-chat-goal-completed", json=data, headers=self.headers)
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
-
-    
-    def get_chat_sentiment(self, conversation_id, criteria, num_max):
-        if self.authenticated:
-            data = {
-            'conversation_id': conversation_id,
-            'criteria': criteria,
-            'num_max': num_max
-            }
-            response = requests.post(_config.blipper_url + "chat-agents/chat-sentiment", json=data, headers=self.headers)
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
-        """
