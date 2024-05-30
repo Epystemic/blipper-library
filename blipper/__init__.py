@@ -26,8 +26,8 @@ class Blipper:
             )
             if self.verbose:
                 resp_json = response.json()
-                resp_json['user_id'] = self.headers['atenea_user_id']
-                resp_json['conversation_id'] = self.headers['atenea_conversation_id']
+                resp_json['user_id'] = self.headers['user_id']
+                resp_json['conversation_id'] = self.headers['conversation_id']
                 return resp_json
             else:
                 return response.json()["response"]
