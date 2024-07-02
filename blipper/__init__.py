@@ -5,7 +5,7 @@ from typing import Literal
 from . import _config
 import logging
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 __version__ = "0.0.1"
@@ -15,12 +15,14 @@ def print_invalid_api_key():
 
 
 class Blipper:
-    def __init__(self, api_key, verbose=True, user_id=None, conversation_id=None):
-        self.api_key = api_key
+    def __init__(self, blipper_api_key, verbose=True, user_id=None, conversation_id=None, model=None, anthropic_api_key=None):
+        self.blipper_api_key = blipper_api_key
+        self.anthropic_api_key = anthropic_api_key
         self.base_url = _config.blipper_url
-        self.headers = {"blipper-api-key": api_key, 'user_id':user_id , 'conversation_id':conversation_id}
+        self.headers = {"blipper-api-key": blipper_api_key, 'user_id':user_id , 'conversation_id':conversation_id}
         self.authenticated, self.user = self.verify_api_key()
         self.verbose = verbose
+        self.model = model
 
     def response_template(self, input_data: dict, func_name: str):
         if self.authenticated:
@@ -38,13 +40,56 @@ class Blipper:
             print_invalid_api_key()
             return None
 
-    def getStatus(self, apikey):
+    def getBlipperStatus(self, apikey):
         data = {"key": apikey}
         response = requests.post(_config.BLIPPER_AUTH_URL, json=data)
         return json.loads(response.content)
 
+    def getAnthropicStatus(self, apikey):
+        headers = {
+            "x-api-key": apikey,
+            "Content-Type": "application/json",
+            "anthropic-version": "2023-06-01"
+        }
+        data = {
+            "model": "claude-3-haiku-20240307",
+            "messages": [{"role": "user", "content": "Test"}],
+            "max_tokens": 1
+        }
+    
+        response = requests.post(_config.ANTHROPIC_AUTH_URL, json=data, headers=headers)
+        return response.ok
+        #     response.raise_for_status()
+        #     return True
+        #     print("API Key is valid.")
+        # except requests.exceptions.HTTPError as http_err:
+        #     if response.status_code == 401:
+        #         print("Unauthorized: Invalid API Key.")
+        #     else:
+        #         print(f"HTTP error occurred: {http_err}")
+        #     return False
+        # except Exception as err:
+        #     print(f"Other error occurred: {err}")
+        #     return False
+        
     def verify_api_key(self):
-        response = self.getStatus(self.api_key)
+        is_blipper, user = self.verify_blipper_api_key()
+        if self.anthropic_api_key:
+            is_anthropic = self.verify_anthropic_api_key()
+            if is_anthropic and is_blipper:
+                return True, user
+            else:
+                return False, None
+        return is_blipper, user
+        
+
+    def verify_anthropic_api_key(self):
+        is_valid = self.getAnthropicStatus(self.anthropic_api_key)
+        return is_valid
+
+
+    def verify_blipper_api_key(self):
+        response = self.getBlipperStatus(self.blipper_api_key)
         is_valid = True if response["status"] == 1 else False
         user_id = response["client_id"]
         return is_valid, user_id
