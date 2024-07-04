@@ -19,7 +19,7 @@ class Blipper:
         self.blipper_api_key = blipper_api_key
         self.anthropic_api_key = anthropic_api_key
         self.base_url = _config.blipper_url
-        self.headers = {"blipper-api-key": blipper_api_key, 'atenea_user_id':user_id , 'atenea_conversation_id':conversation_id}
+        self.headers = {"blipper-api-key": blipper_api_key, 'atenea-user-id':user_id , 'atenea-conversation-id':conversation_id}
         self.authenticated, self.user = self.verify_api_key()
         self.verbose = verbose
         self.model = model
