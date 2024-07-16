@@ -429,29 +429,15 @@ class Blipper:
         Function to complete variables of a document template based on information from source documents.
         """
         if self.authenticated:
-            files = [
-                (
-                    'file', 
-                    (
-                        Path(source_document.name).name,
-                        source_document.read(),
-                        Path(source_document.name).suffix
-                    )
-                )
-                for source_document in source_documents
-            ]
-
             data = {
                 "template_id": template_id,
                 "final_document_id": final_document_id,
+                "source_files_ids": source_documents
             }
-            response = requests.post(
-                self.base_url + "create-template/", files=files, data=data
-            )
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
+        func_name = "create-template"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
+
 
     def breakDownTask(self, text: str, num: int):
         if self.authenticated:
