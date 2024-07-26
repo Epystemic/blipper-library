@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='blipper',
-    version='0.0.1',
+    version='0.0.2',
     license=None,
     description='Blipper library by Atenea AI',
     long_description=open('README.md').read(),
