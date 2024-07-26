@@ -30,11 +30,7 @@ class Blipper:
         self.blipper_api_key = blipper_api_key
         self.anthropic_api_key = anthropic_api_key
         self.base_url = _config.blipper_url
-        self.headers = {
-            "blipper-api-key": blipper_api_key,
-            "user_id": user_id,
-            "conversation_id": conversation_id,
-        }
+        self.headers = {"blipper-api-key": blipper_api_key, 'atenea-user-id':user_id , 'atenea-conversation-id':conversation_id}
         self.authenticated, self.user = self.verify_api_key()
         self.verbose = verbose
         self.model = model
@@ -46,8 +42,8 @@ class Blipper:
             )
             if self.verbose:
                 resp_json = response.json()
-                resp_json["user_id"] = self.headers["user_id"]
-                resp_json["conversation_id"] = self.headers["conversation_id"]
+                resp_json['user_id'] = self.headers['atenea-user-id']
+                resp_json['conversation_id'] = self.headers['atenea-conversation-id']
                 return resp_json
             else:
                 return response.json()["response"]
@@ -453,29 +449,14 @@ class Blipper:
         Function to complete variables of a document template based on information from source documents.
         """
         if self.authenticated:
-            files = [
-                (
-                    "file",
-                    (
-                        Path(source_document.name).name,
-                        source_document.read(),
-                        Path(source_document.name).suffix,
-                    ),
-                )
-                for source_document in source_documents
-            ]
-
             data = {
                 "template_id": template_id,
                 "final_document_id": final_document_id,
+                "source_files_ids": source_documents
             }
-            response = requests.post(
-                self.base_url + "create-template/", files=files, data=data
-            )
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
+        func_name = "create-template"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
 
     def breakDownTask(self, text: str, num: int):
         if self.authenticated:
