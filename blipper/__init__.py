@@ -1,25 +1,41 @@
 from io import BufferedReader
 from pathlib import Path
-import json, requests
+import json
+import requests
 from typing import Literal
 from . import _config
 import logging
 
-logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.ERROR, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 __version__ = "0.0.1"
+
 
 def print_invalid_api_key():
     logger.error("Invalid API key")
 
 
 class Blipper:
-    def __init__(self, blipper_api_key, verbose=True, user_id=None, conversation_id=None, model=None, anthropic_api_key=None):
+    def __init__(
+        self,
+        blipper_api_key,
+        verbose=True,
+        user_id=None,
+        conversation_id=None,
+        model=None,
+        anthropic_api_key=None,
+    ):
         self.blipper_api_key = blipper_api_key
         self.anthropic_api_key = anthropic_api_key
         self.base_url = _config.blipper_url
-        self.headers = {"blipper-api-key": blipper_api_key, 'user_id':user_id , 'conversation_id':conversation_id}
+        self.headers = {
+            "blipper-api-key": blipper_api_key,
+            "user_id": user_id,
+            "conversation_id": conversation_id,
+        }
         self.authenticated, self.user = self.verify_api_key()
         self.verbose = verbose
         self.model = model
@@ -31,8 +47,8 @@ class Blipper:
             )
             if self.verbose:
                 resp_json = response.json()
-                resp_json['user_id'] = self.headers['user_id']
-                resp_json['conversation_id'] = self.headers['conversation_id']
+                resp_json["user_id"] = self.headers["user_id"]
+                resp_json["conversation_id"] = self.headers["conversation_id"]
                 return resp_json
             else:
                 return response.json()["response"]
@@ -49,14 +65,14 @@ class Blipper:
         headers = {
             "x-api-key": apikey,
             "Content-Type": "application/json",
-            "anthropic-version": "2023-06-01"
+            "anthropic-version": "2023-06-01",
         }
         data = {
             "model": "claude-3-haiku-20240307",
             "messages": [{"role": "user", "content": "Test"}],
-            "max_tokens": 1
+            "max_tokens": 1,
         }
-    
+
         response = requests.post(_config.ANTHROPIC_AUTH_URL, json=data, headers=headers)
         return response.ok
         #     response.raise_for_status()
@@ -71,7 +87,7 @@ class Blipper:
         # except Exception as err:
         #     print(f"Other error occurred: {err}")
         #     return False
-        
+
     def verify_api_key(self):
         is_blipper, user = self.verify_blipper_api_key()
         if self.anthropic_api_key:
@@ -81,12 +97,10 @@ class Blipper:
             else:
                 return False, None
         return is_blipper, user
-        
 
     def verify_anthropic_api_key(self):
         is_valid = self.getAnthropicStatus(self.anthropic_api_key)
         return is_valid
-
 
     def verify_blipper_api_key(self):
         response = self.getBlipperStatus(self.blipper_api_key)
@@ -120,7 +134,11 @@ class Blipper:
             print_invalid_api_key()
             return None
 
-    def translateText(self, text: str, target_lang: Literal["inglés", "español", "aleman", "portugues"]):
+    def translateText(
+        self,
+        text: str,
+        target_lang: Literal["inglés", "español", "aleman", "portugues"],
+    ):
         """
         Function to translate a given text into a selected language
         """
@@ -129,7 +147,11 @@ class Blipper:
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def translateFile(self, file_id: str, target_lang: Literal["inglés", "español", "aleman", "portugues"]):
+    def translateFile(
+        self,
+        file_id: str,
+        target_lang: Literal["inglés", "español", "aleman", "portugues"],
+    ):
         """
         Function to translate the text of a given file into a selected language
         """
@@ -410,7 +432,7 @@ class Blipper:
         if self.authenticated:
             file = {"file": (filename, file.read(), Path(filename).suffix)}
             response = requests.post(
-                self.base_url + f"upload-template-file/",
+                self.base_url + "upload-template-file/",
                 files=file,
                 headers=self.headers,
             )
@@ -418,7 +440,7 @@ class Blipper:
         else:
             print_invalid_api_key()
             return None
-        
+
     def createTemplate(
         self,
         template_id: str,
@@ -431,12 +453,12 @@ class Blipper:
         if self.authenticated:
             files = [
                 (
-                    'file', 
+                    "file",
                     (
                         Path(source_document.name).name,
                         source_document.read(),
-                        Path(source_document.name).suffix
-                    )
+                        Path(source_document.name).suffix,
+                    ),
                 )
                 for source_document in source_documents
             ]
