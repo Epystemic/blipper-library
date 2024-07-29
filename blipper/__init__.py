@@ -90,12 +90,15 @@ class Blipper:
 
     def verify_api_key(self):
         is_blipper, user = self.verify_blipper_api_key()
-        if self.anthropic_api_key:
-            is_anthropic = self.verify_anthropic_api_key()
-            if is_anthropic and is_blipper:
-                return True, user
-            else:
-                return False, None
+        if is_blipper:
+            if self.anthropic_api_key:
+                is_anthropic = self.verify_anthropic_api_key()
+                if is_anthropic:
+                    return True, user
+                else:
+                    return False, None
+        else:
+            return False, None
         return is_blipper, user
 
     def verify_anthropic_api_key(self):
@@ -466,14 +469,11 @@ class Blipper:
             data = {
                 "template_id": template_id,
                 "final_document_id": final_document_id,
+                "source_files_ids": source_documents,
             }
-            response = requests.post(
-                self.base_url + "create-template/", files=files, data=data
-            )
-            return response.json()
-        else:
-            print_invalid_api_key()
-            return None
+        func_name = "create-template"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
 
     def breakDownTask(self, text: str, num: int):
         if self.authenticated:
@@ -550,5 +550,16 @@ class Blipper:
         if self.authenticated:
             data = {"file_id": file_id}
         func_name = "TextFromVideo"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
+
+    def SendWhatsappMessage(self, waapi_apikey, phone_number, message):
+        if self.authenticated:
+            data = {
+                "waapi_apikey": waapi_apikey,
+                "phone_number": phone_number,
+                "message": message,
+            }
+        func_name = "whatsapp/send-message"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
