@@ -30,15 +30,17 @@ class Blipper:
     ):
         self.blipper_api_key = blipper_api_key
         self.anthropic_api_key = anthropic_api_key
-        self.base_url = _config.blipper_url
+        self.base_url = _config.blipper_url,
+        self.model = model,
         self.headers = {
             "blipper-api-key": blipper_api_key,
             "user_id": user_id,
             "conversation_id": conversation_id,
+            "model": model
         }
         self.authenticated, self.user = self.verify_api_key()
         self.verbose = verbose
-        self.model = model
+
 
     def response_template(self, input_data: dict, func_name: str):
         if self.authenticated:
