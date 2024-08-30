@@ -456,18 +456,6 @@ class Blipper:
         Function to complete variables of a document template based on information from source documents.
         """
         if self.authenticated:
-            files = [
-                (
-                    "file",
-                    (
-                        Path(source_document.name).name,
-                        source_document.read(),
-                        Path(source_document.name).suffix,
-                    ),
-                )
-                for source_document in source_documents
-            ]
-
             data = {
                 "template_id": template_id,
                 "final_document_id": final_document_id,
