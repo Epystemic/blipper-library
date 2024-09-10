@@ -30,23 +30,23 @@ class Blipper:
     ):
         self.blipper_api_key = blipper_api_key
         self.anthropic_api_key = anthropic_api_key
-        self.base_url = _config.blipper_url,
-        self.model = model,
+        self.base_url = (_config.blipper_url,)
+        self.model = (model,)
         self.headers = {
             "blipper-api-key": blipper_api_key,
             "user_id": user_id,
             "conversation_id": conversation_id,
-            "model": model
+            "model": model,
         }
         self.authenticated, self.user = self.verify_api_key()
         self.verbose = verbose
-
 
     def response_template(self, input_data: dict, func_name: str):
         if self.authenticated:
             response = requests.post(
                 _config.blipper_url + func_name, json=input_data, headers=self.headers
             )
+            logger.info(f"response: {response}")
             if self.verbose:
                 resp_json = response.json()
                 resp_json["user_id"] = self.headers["user_id"]
@@ -213,8 +213,8 @@ class Blipper:
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def describeImage(self, file_id):
-        data = {"file_id": file_id}
+    def describeImage(self, file_id: str, language: str):
+        data = {"file_id": file_id, "language": language}
         func_name = "describeImage"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
@@ -504,9 +504,9 @@ class Blipper:
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def paraphraseSimple(self, text: str):
+    def paraphraseSimple(self, text: str, language: str):
         if self.authenticated:
-            data = {"text": text}
+            data = {"text": text, "language": language}
         func_name = "paraphraseSimple"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
@@ -551,5 +551,54 @@ class Blipper:
                 "message": message,
             }
         func_name = "whatsapp/send-message"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
+
+    def SendWhatsappMedia(self, waapi_apikey, phone_number, mediaUrl):
+        if self.authenticated:
+            data = {
+                "waapi_apikey": waapi_apikey,
+                "phone_number": phone_number,
+                "mediaUrl": mediaUrl,
+            }
+        func_name = "whatsapp/send-media"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
+
+    def SendWhatsappAudioFromText(self, waapi_apikey, phone_number, text):
+        if self.authenticated:
+            data = {
+                "waapi_apikey": waapi_apikey,
+                "phone_number": phone_number,
+                "text": text,
+            }
+        func_name = "whatsapp/send-AudioFromText"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
+
+    def routeQuery(self, text):
+        if self.authenticated:
+            data = {
+                "text": text
+            }
+        func_name = "rag/route-query"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
+
+    def textFromURL(self, url):
+        if self.authenticated:
+            data = {
+                "url": url
+            }
+        func_name = "TextFromURL"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
+
+    def promptClaude(self, text):
+        if self.authenticated:
+            data = {
+                "text": text
+            }
+        func_name = "TextFromURL"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
