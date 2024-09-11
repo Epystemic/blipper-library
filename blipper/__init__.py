@@ -215,7 +215,7 @@ class Blipper:
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def describeImage(self, file_id: str, language: str):
+    def describeImage(self, file_id: str, language=None):
         data = {"file_id": file_id, "language": language}
         func_name = "describeImage"
         result = self.response_template(input_data=data, func_name=func_name)
@@ -481,7 +481,7 @@ class Blipper:
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def TranscriptFromConversation(self, s3_uri: str, language: str, max_speakers: int):
+    def TranscriptFromConversation(self, s3_uri: str, max_speakers: int, language=None):
         if self.authenticated:
             data = {
                 "s3_uri": s3_uri,
@@ -506,7 +506,7 @@ class Blipper:
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def paraphraseSimple(self, text: str, language: str):
+    def paraphraseSimple(self, text: str, language=None):
         if self.authenticated:
             data = {"text": text, "language": language}
         func_name = "paraphraseSimple"
@@ -662,21 +662,13 @@ class Blipper:
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def response_files(self, input_data: dict, filepath: str, func_name: str):
+    def answerQuestion(self, text, query, language=None):
         if self.authenticated:
-            basename = os.path.basename(filepath)
-            files = {'file': (basename, open(filepath, 'rb'))}
-            response = requests.post(
-                _config.blipper_url + func_name, json=input_data, files=files, headers=self.headers
-            )
-            logger.info(f"response: {response}")
-            if self.verbose:
-                resp_json = response.json()
-                resp_json["user_id"] = self.headers["user_id"]
-                resp_json["conversation_id"] = self.headers["conversation_id"]
-                return resp_json
-            else:
-                return response.json()["response"]
-        else:
-            print_invalid_api_key()
-            return None
+            data = {
+                "text": text,
+                "query": query,
+                "language": language
+            }
+        func_name = "answerQuestion"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
