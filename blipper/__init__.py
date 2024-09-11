@@ -1,10 +1,12 @@
+import os
+import logging
 from io import BufferedReader
 from pathlib import Path
 import json
 import requests
 from typing import Literal
 from . import _config
-import logging
+
 
 logging.basicConfig(
     level=logging.ERROR, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -602,3 +604,79 @@ class Blipper:
         func_name = "TextFromURL"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
+
+    def generateImageStableDiffusion(self, text):
+        if self.authenticated:
+            data = {
+                "text": text
+            }
+        func_name = "generateImageStableDiffusion"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
+
+    def textFromImageOpenAI(self, file_id):
+        if self.authenticated:
+            data = {
+                "file_id": file_id
+            }
+        func_name = "textFromImageOpenAI"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
+
+    def detectExplicitContent(self, file_id):
+        if self.authenticated:
+            data = {
+                "file_id": file_id
+            }
+        func_name = "detectExplicitContent"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
+
+    def summarizeFile(self, file_id, length_words):
+        if self.authenticated:
+            data = {
+                "file_id": file_id,
+                "length_words": length_words
+            }
+        func_name = "files-manager/summarize-file"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
+
+    def categorizeFile(self, file_id, options):
+        if self.authenticated:
+            data = {
+                "file_id": file_id,
+                "options": options
+            }
+        func_name = "files-manager/categorize-file"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
+
+    def questionFile(self, file_id, query):
+        if self.authenticated:
+            data = {
+                "file_id": file_id,
+                "query": query
+            }
+        func_name = "files-manager/question-file"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
+
+    def response_files(self, input_data: dict, filepath: str, func_name: str):
+        if self.authenticated:
+            basename = os.path.basename(filepath)
+            files = {'file': (basename, open(filepath, 'rb'))}
+            response = requests.post(
+                _config.blipper_url + func_name, json=input_data, files=files, headers=self.headers
+            )
+            logger.info(f"response: {response}")
+            if self.verbose:
+                resp_json = response.json()
+                resp_json["user_id"] = self.headers["user_id"]
+                resp_json["conversation_id"] = self.headers["conversation_id"]
+                return resp_json
+            else:
+                return response.json()["response"]
+        else:
+            print_invalid_api_key()
+            return None
