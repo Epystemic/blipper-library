@@ -29,6 +29,9 @@ class Blipper:
         conversation_id=None,
         model=None,
         anthropic_api_key=None,
+        woocommerce_url=None,
+        woocommerce_consumer_key=None,
+        woocommerce_consumer_secret=None,
     ):
         self.blipper_api_key = blipper_api_key
         self.anthropic_api_key = anthropic_api_key
@@ -38,6 +41,9 @@ class Blipper:
             "blipper-api-key": blipper_api_key,
             "user_id": user_id,
             "conversation_id": conversation_id,
+            "atenea-woocommerce-url":woocommerce_url,
+            "atenea-woocommerce-consumer-key":woocommerce_consumer_key,
+            "atenea-woocommerce-consumer-secret": woocommerce_consumer_secret,
             "model": model,
         }
         self.authenticated, self.user = self.verify_api_key()
@@ -670,5 +676,25 @@ class Blipper:
                 "language": language
             }
         func_name = "answerQuestion"
+        result = self.response_template(input_data=data, func_name=func_name)
+        return result
+    
+    def WooconnerceGetProductDetailsFromUrl(
+        self,
+        domain: str,
+        product_directory: str,
+        product_url: str,
+        desired_basic_attributes: list[str] | None = None,
+        desired_variation_attributes: list[str] | None = None
+    ):
+        if self.authenticated:
+            data = {
+                "domain": domain,
+                "product_directory": product_directory,
+                "product_url": product_url,
+                "desired_basic_attributes": desired_basic_attributes,
+                "desired_variation_attributes": desired_variation_attributes,
+            }
+        func_name = "woocommerce/get-product-details-from-url"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
