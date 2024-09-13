@@ -307,15 +307,15 @@ class Blipper:
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def beepBadWords(self, text, custom_list):
+    def hideSwearWords(self, text, custom_list):
         data = {"text": text, "custom_list": custom_list}
-        func_name = "beepBadWords"
+        func_name = "hideSwearWords"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
-    def hasBadWords(self, text):
+    def hasSwearWords(self, text):
         data = {"text": text}
-        func_name = "hasBadWords"
+        func_name = "hasSwearWords"
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
