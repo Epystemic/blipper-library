@@ -169,7 +169,11 @@ class Blipper:
 
     def getAllFiles(self):
         if self.authenticated:
-            response = requests.get(_config.blipper_url + "getAllFiles")
+            headers = {
+                'accept': 'application/json',
+                'blipper-api-key': self.blipper_api_key
+                }
+            response = requests.get(_config.blipper_url + "getAllFiles", headers=headers)
             return response.json()
         else:
             print_invalid_api_key()
