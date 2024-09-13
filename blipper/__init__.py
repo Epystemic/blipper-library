@@ -60,6 +60,23 @@ class Blipper:
             print_invalid_api_key()
             return None
 
+    def response_files(self, input_data: dict, files: dict, func_name: str):
+        if self.authenticated:
+            response = requests.post(
+                _config.blipper_url + func_name, files=files, data=input_data, headers=self.headers
+            )
+            logger.info(f"response: {response}")
+            if self.verbose:
+                resp_json = response.json()
+                resp_json["user_id"] = self.headers["user_id"]
+                resp_json["conversation_id"] = self.headers["conversation_id"]
+                return resp_json
+            else:
+                return response.json()["response"]
+        else:
+            print_invalid_api_key()
+            return None
+
     def getBlipperStatus(self, apikey):
         data = {"key": apikey}
         response = requests.post(_config.BLIPPER_AUTH_URL, json=data)
@@ -127,10 +144,21 @@ class Blipper:
         result = self.response_template(input_data=data, func_name=func_name)
         return result
 
+    # def uploadFile(self, src_file, dest_dir):
+    #     data = {"src_file": src_file, "dest_dir": dest_dir}
+    #     func_name = "uploadFile"
+    #     result = self.response_template(input_data=data, func_name=func_name)
+    #     return result
+
     def uploadFile(self, src_file, dest_dir):
-        data = {"src_file": src_file, "dest_dir": dest_dir}
-        func_name = "uploadFile"
-        result = self.response_template(input_data=data, func_name=func_name)
+        if not os.path.exists(src_file):
+            raise FileNotFoundError(f"{src_file} does not exist")
+
+        with open(src_file, 'rb') as f:
+            files = {'src_file': (os.path.basename(src_file), f)}
+            data = {'dest_dir': dest_dir}
+            func_name = "uploadFile"
+            result = self.response_files(input_data=data, files=files, func_name=func_name)
         return result
 
     def getAllFiles(self):
